@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="demo_cl" />
+        <module name="eureka_server" />
+        <module name="springBootDemo" />
+        <module name="eureka_web" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="demo_cl" target="1.8" />
+      <module name="eureka_server" target="1.8" />
+      <module name="eureka_web" target="1.8" />
+      <module name="springBootDemo" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="demo_cl" options="-parameters" />
+      <module name="eureka_server" options="-parameters" />
+      <module name="eureka_web" options="-parameters" />
+      <module name="springBootDemo" options="-parameters" />
+    </option>
+  </component>
+</project>

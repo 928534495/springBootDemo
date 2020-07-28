@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.UserMapper"> <!--admin 对应sqlMapConfig.xml配置文件的mappers模块-->
+
+    <!--    <resultMap type="www.User" id="user">-->
+    <!--        <id column="user_id" property="userId"/>-->
+    <!--        <result column="user_name" property="userName"/>-->
+    <!--        <result column="user_account" property="userAccount"/>-->
+    <!--        <result column="user_password" property="userPassword"/>-->
+    <!--        <result column="user_sex" property="userSex"/>-->
+    <!--        <result column="user_education" property="userEducation"/>-->
+    <!--        <result column="user_occupation" property="userOccupation"/>-->
+    <!--        <result column="user_phone" property="userPhone"/>-->
+    <!--        <result column="user_email" property="userEmail"/>-->
+    <!--        <result column="user_status" property="userStatus"/>-->
+    <!--        <result column="user_score" property="userScore"/>-->
+    <!--        <result column="user_create_date" property="userCreateDate"/>-->
+    <!--        <result column="user_level_id" property="userLevelId"/>-->
+    <!--        <result column="user_download_count" property="userDownloadCount"/>-->
+    <!--        <result column="user_upload_count" property="userUploadCount"/>-->
+
+    <!--    </resultMap>-->
+
+    <!--    <select id="selectUserList" resultMap="user" parameterType="www.User">-->
+
+    <!--    select * from t_user   limit 1,10;-->
+
+    <!--  </select>-->
+    <select id="selectUserInfoList" resultType="com.example.demo.bean.UserInfo" parameterType="java.util.HashMap">
+        select user_id,
+        user_name,
+        user_account,
+        user_password,
+        user_sex,
+        user_education,
+        user_occupation,
+        user_phone,
+        user_email,
+        user_score,
+        user_create_date,
+        user_level_id,
+        user_download_count,
+        user_upload_count,
+        level_name,
+        level_score,
+        parameters_state
+        from t_user
+        left join t_level on t_user.user_level_id = t_level.level_id
+        left join t_parameters on user_status = parameters_value
+
+        <where>
+            and parameters_text = '用户状态'
+            <if test="userAccount!=null and userAccount!=''">
+                and user_account like concat('%',#{userAccount},'%')
+            </if>
+            <if test="startTime!=null and startTime!=''">
+                and date_format(user_create_date,'%Y-%m-%d')&gt;=#{startTime}
+            </if>
+            <if test="endTime!=null and endTime!=''">
+                and date_format(user_create_date,'%Y-%m-%d')&lt;=#{endTime}
+            </if>
+
+        </where>
+
+        limit #{page},#{limit}
+    </select>
+
+    <select id="selectUserCount" resultType="java.lang.Integer">
+        select count(*)as co from t_user
+        <where>
+            <if test="userAccount!=null and userAccount!=''">
+                and user_account like concat('%',#{userAccount},'%')
+            </if>
+            <if test="startTime!=null and startTime!=''">
+                and date_format(user_create_date,'%Y-%m-%d')&gt;=#{startTime}
+            </if>
+            <if test="endTime!=null and endTime!=''">
+                and date_format(user_create_date,'%Y-%m-%d')&lt;=#{endTime}
+            </if>
+
+        </where>
+
+    </select>
+
+    <select id="login" resultType="com.example.demo.bean.User" parameterType="com.example.demo.bean.User">
+    select * from t_user
+     where user_account= #{userAccount} and user_password=#{userPassword}
+  </select>
+
+
+    <insert id="regis" parameterType="com.example.demo.bean.User">
+    insert into t_user ( user_name, user_account, user_password, user_sex, user_education, user_occupation, user_phone, user_email)
+    values (#{userName},#{userAccount},#{userPassword},#{userSex},#{userEducation},#{userOccupation},#{userPhone},#{userEmail})
+  </insert>
+
+    <select id="verAccount" resultType="java.lang.Integer" parameterType="java.lang.String">
+   select count(*)co from t_user
+     where user_account= #{userAccount}
+  </select>
+
+    <select id="uVerifiPhone" resultType="java.lang.Integer" parameterType="java.lang.String">
+   select count(*)co from t_user
+     where user_phone= #{userPhone}
+  </select>
+    <update id="updateUser">
+
+        update t_user
+
+        <set>
+            <if test="state!=null and state!='' ">
+                user_status=#{state},
+            </if>
+            <if test="integral!=null and integral!='' ">
+                user_score=#{integral},
+            </if>
+        </set>
+
+        where user_id=#{userId}
+
+    </update>
+
+    <update id="changeMsg">
+
+        update t_user
+
+        <set>
+
+            <if test="userName!=null and userName!='' ">
+                user_name=#{userName},
+            </if>
+            <if test="userAccount!=null and userAccount!='' ">
+                user_account=#{userAccount},
+            </if>
+            <if test="userPassword!=null and userPassword!='' ">
+                user_password=#{userPassword},
+            </if>
+            <if test="userSex!=null and userSex!='' ">
+                user_sex=#{userSex},
+            </if>
+            <if test="userEducation!=null and userEducation!='' ">
+                user_education=#{userEducation},
+            </if>
+
+            <if test="userOccupation!=null and userOccupation!='' ">
+                user_occupation=#{userOccupation},
+            </if>
+            <if test="userPhone!=null and userPhone!='' ">
+                user_phone=#{userPhone},
+            </if>
+            <if test="userEmail!=null and userEmail!='' ">
+                user_email=#{userEmail},
+            </if>
+        </set>
+
+        where user_id=#{userId}
+
+    </update>
+    <select id="verifyPass" resultType="com.example.demo.bean.User" parameterType="int">
+      select * from t_user
+     where user_id= #{userId}
+  </select>
+
+
+    <!--        <select id="selectList" resultType="www.Admin" parameterType="java.util.Map">-->
+    <!--        select admin_id as adminId,admin_name as adminName,admin_password as adminPassword, admin_role_id as adminRoleId from t_admin-->
+    <!--         where admin_name like concat('%',#{adminName},'%')  limit 0,10-->
+    <!--      </select>-->
+
+
+</mapper>

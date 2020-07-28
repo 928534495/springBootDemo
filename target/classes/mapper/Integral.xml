@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.IntegralMapper">
+
+   <insert id="insetIntegral">
+
+    insert into t_integral( integral_thing, integral_score, integral_user_id, Integral_file_id)
+    values (#{integralThing},#{integralScore},#{integralUserId},#{integralFileId});
+
+   </insert>
+
+    <select id="findIntegral" resultType="com.example.demo.bean.Integral">
+        select * from t_integral where integral_user_id=#{userId}
+        limit #{page},#{limit}
+
+    </select>
+
+    <select id="integralAccount" resultType="java.lang.Integer">
+   select count(*)co from t_integral where integral_user_id=#{userId}
+
+  </select>
+
+
+</mapper>

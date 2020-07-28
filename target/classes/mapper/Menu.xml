@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.MenuMapper">
+
+    <resultMap id="tb_menu" type="com.example.demo.bean.Menu">
+        <result column="m1_name" property="menu_Name"/>
+        <collection property="menuList" javaType="java.util.List" ofType="com.example.demo.bean.Menu">
+            <result column="m2_name" property="menu_Name"/>
+            <result column="m2_url" property="url"/>
+            <result column="orders" property="orders"/>
+        </collection>
+    </resultMap>
+    <select id="findAll" resultMap="tb_menu">
+            select m1.menu_name m1_name,m2.menu_name m2_name,m2.menu_url m2_url,m2.menu_orders orders
+from t_admin a
+         inner join t_role r on a.admin_role_id = r.role_id
+         inner join t_menu_relation mr on r.role_id = mr.relation_role_id inner join t_menu m1 on mr.relation_menu_id = m1.menu_id
+        inner join t_menu m2 on m1.menu_id=m2.menu_parent_id
+where a.admin_id=#{id}
+    </select>
+
+
+</mapper>
