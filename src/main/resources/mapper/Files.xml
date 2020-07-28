@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.FileMapper">
+
+
+    <select id="filesInfoList" resultType="com.example.demo.bean.FilesInfo">
+
+        -- select t1.file_id, file_name, file_create_date, file_leagth, file_user_id, file_title, file_content,
+        -- file_status, file_download_count ,
+        -- t2.type_id, type_name, type_suffix
+        -- from t_file t1 left join t_file_type t2 on t1.file_type_id= t2.type_id
+        -- select t1.file_id, file_name, file_create_date, file_leagth,
+        -- (select user_account from t_user where t_user.user_id=file_user_id)as user_account,
+        -- file_title, file_content, file_status, file_download_count ,
+        -- t2.type_id, type_name, type_suffix
+        -- from t_file t1 left join t_file_type t2 on t1.file_type_id= t2.type_id
+        select
+        tf.file_id,tf.file_name,tf.file_create_date,tf.file_leagth,tf.file_title,tf.file_content,tf.file_download_count,
+        tt.type_name,tt.type_suffix,tt.type_id,tu.user_account,
+        tp.parameters_state,tf.file_integral
+        from t_file tf left join t_file_type tt on tf.file_type_id=tt.type_id
+        left join t_user tu on tf.file_user_id=tu.user_id
+        left join t_parameters tp on tp.parameters_value=tf.file_status
+        <where>
+            <if test="fileName!=null and fileName!=''">
+                and tf.file_name like concat('%',#{fileName},'%')
+            </if>
+            <if test="startTime!=null and startTime!=''">
+                and date_format(tf.file_create_date,'%Y-%m-%d')&gt;=#{startTime}
+            </if>
+            <if test="endTime!=null and endTime!=''">
+                and date_format(tf.file_create_date,'%Y-%m-%d')&lt;=#{endTime}
+            </if>
+            <if test="fileType!=null and fileType!=''">
+                and tt.type_suffix=#{fileType}
+            </if>
+            <if test="userAccount!=null and userAccount!=''">
+                and tu.user_account=#{userAccount}
+            </if>
+            <if test="fileId!=null and fileId!=''">
+                and tf.file_id=#{fileId}
+            </if>
+            and tp.parameters_text='文件配置'
+        </where>
+
+        limit #{page},#{limit}
+
+    </select>
+
+    <select id="selectInfoFileCount" resultType="java.lang.Integer">
+
+        select
+        count(*) as co
+        from t_file tf left join t_file_type tt on tf.file_type_id=tt.type_id
+        left join t_user tu on tf.file_user_id=tu.user_id
+        left join t_parameters tp on tp.parameters_value=tf.file_status
+        <where>
+            <if test="fileName!=null and fileName!=''">
+                and file_name like concat('%',#{fileName},'%')
+            </if>
+            <if test="startTime!=null and startTime!=''">
+                and date_format(file_create_date,'%Y-%m-%d')&gt;=#{startTime}
+            </if>
+            <if test="endTime!=null and endTime!=''">
+                and date_format(file_create_date,'%Y-%m-%d')&lt;=#{endTime}
+            </if>
+            <if test="fileType!=null and fileType!=''">
+                and tt.type_suffix=#{fileType}
+            </if>
+            <if test="userAccount!=null and userAccount!=''">
+                and tu.user_account=#{userAccount}
+            </if>
+            and tp.parameters_text='文件配置'
+        </where>
+
+    </select>
+
+    <update id="updateFile">
+
+        update t_file
+        <set>
+            <if test="state!=null and state!='' ">
+                file_status =#{state},
+            </if>
+            <!--            <if test="parametersState!=null and parametersState!=''">-->
+            <!--            file_status=#{state},-->
+
+            <!--            </if>-->
+
+        </set>
+
+        where file_id=#{fileId}
+
+    </update>
+    <select id="fileTypeList" resultType="com.example.demo.bean.FileType">
+        select * from t_file_type
+        <where>
+            <if test="state!=null and state!=''">
+                and type_state=#{state}
+            </if>
+
+            <if test="typeSuffix!=null and typeSuffix!=''">
+                and type_suffix=#{typeSuffix}
+            </if>
+        </where>
+
+
+    </select>
+
+    <update id="setType">
+        update t_file_type
+        <set>
+            <if test="state!=null and state!='' ">
+                type_state=#{state},
+            </if>
+        </set>
+
+        where type_id=#{typeId}
+
+    </update>
+
+    <insert id="insetFile" parameterType="com.example.demo.bean.Files" useGeneratedKeys="true" keyProperty="fileId">
+
+         insert into t_file ( file_name,  file_leagth, file_user_id, file_type_id, file_title, file_content,  file_integral, file_path)
+     values
+         (#{fileName},#{fileLeagth},#{fileUserId},#{fileTypeId},#{fileTitle},#{fileContent},#{fileIntegral},#{filePath})
+
+    </insert>
+
+    <select id="findFiles" resultType="com.example.demo.bean.Files">
+        select file_id, file_name, file_create_date, file_leagth, file_user_id, file_type_id, file_title, file_content, file_status, file_download_count, file_integral, file_path
+        from t_file where file_id=#{fileId}
+    </select>
+
+
+
+</mapper>

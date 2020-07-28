@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.AdminMapper"> <!--admin 对应sqlMapConfig.xml配置文件的mappers模块-->
+
+    <!--    <resultMap type="www.Admin" id="admin">-->
+    <!--        <id column="admin_id" property="adminId"/>-->
+    <!--        <result column="admin_name" property="adminName"/>-->
+    <!--        <result column="admin_password" property="adminPassword"/>-->
+    <!--        <result column="admin_role_id" property="adminRoleId"/>-->
+    <!--    </resultMap>-->
+
+    <select id="login" resultType="com.example.demo.bean.Admin" parameterType="com.example.demo.bean.Admin">
+    select admin_id,admin_name ,admin_password , admin_role_id from t_admin
+     where admin_name= #{adminName} and admin_password=#{adminPassword}
+  </select>
+
+
+    <select id="selectList" resultType="com.example.demo.bean.Admin" parameterType="java.util.Map">
+    select admin_id ,admin_name ,admin_password , admin_role_id  from t_admin
+
+  </select>
+
+    <select id="adminList" resultType="com.example.demo.bean.Admin" parameterType="java.util.Map">
+        select admin_id ,admin_name ,admin_password , admin_role_id ,role_name from t_admin left join t_role on
+        admin_role_id=role_id ;
+        <where>
+            <if test="adminName!=null and adminName!='' ">
+                and admin_name like concat('%' ,#{adminName},'%')
+            </if>
+            <if test="adminRoleId!=null and adminRoleId!='' ">
+                and admin_role_id like concat('%' ,#{adminRoleId},'%')
+            </if>
+        </where>
+
+    </select>
+
+    <select id="levelList" resultType="com.example.demo.bean.Level">
+        select * from t_level
+
+
+    </select>
+    <update id="updateLevel">
+
+        update t_level
+        <set>
+            <if test="levelName!=null and levelName!=''">
+            level_name=#{levelName},
+            </if>
+            <if test="levelScore!=null and levelScore!=''">
+            level_score=#{levelScore},
+            </if>
+
+        </set>
+        where level_id=#{levelId}
+
+    </update>
+
+    <select id="level" resultType="com.example.demo.bean.Level" parameterType="java.lang.String">
+        select * from t_level
+        <where>
+            and level_id=#{userLevelId}
+        </where>
+
+
+    </select>
+
+
+</mapper>

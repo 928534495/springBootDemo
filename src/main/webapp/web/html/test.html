@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div class="cc">
+    <p class="ga1a">hhhh</p>
+    <div class="aa">
+        aad
+        <div ddd="gaa"> dddaaaa</div>
+        <div class="aa">
+            <span>fff</span>
+            <div class="aa"> bbb</div>
+        </div>
+    </div>
+    <div class="aa">555</div>
+<ul>
+    <li class="a1"> 0</li>
+    <li class="a2"> 1</li>
+    <li class="a3">2</li>
+    <li class="a1"> 3</li>
+
+</ul>
+</div>
+<div class="aa">同一级 </div>
+<div class="aa">同一级 </div>
+
+
+<ul>
+
+    <li class="a1"> 0</li>
+    <li class="a1"> 1</li>
+    <li class="a1">2</li>
+    <li class="a1"> 3</li>
+    <li class="a1"> 4</li>
+</ul>
+
+<button>点饿哦</button>
+
+<script charset="UTF-8" src="../staticFile/jquery-3.5.1.js"></script>
+<script>
+
+    $(document).ready(function () {
+
+        $('button').on('click',function () {
+
+            // $('.cc ~.aa').css('background-color','red');
+            $('div[ddd*="ga"]').css('background-color','red');
+        })
+
+    })
+
+</script>
+</body>
+</html>
