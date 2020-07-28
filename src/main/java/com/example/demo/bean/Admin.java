@@ -1,6 +1,7 @@
 package com.example.demo.bean;
 
 public class Admin {
+    //来自我的注释
     private int adminId;
     private String adminName;
     private String adminPassword;
